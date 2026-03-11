@@ -1,0 +1,33 @@
+# Node / Vite
+node_modules
+dist
+dist-ssr
+.vite
+*.tsbuildinfo
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Editors / OS
+.DS_Store
+Thumbs.db
+.idea
+.vscode
+*.swp
+
+# Tests / coverage
+coverage
+*.lcov
+
+# Supabase CLI artifacts
+supabase/.temp
+supabase/.branches
+supabase/.supabase
