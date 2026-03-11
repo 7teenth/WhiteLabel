@@ -19,7 +19,7 @@ export default function AccountPage() {
         }}
       >
         <h2 style={{ marginTop: 0 }}>{t('account.plan')}</h2>
-        <p style={{ color: 'var(--muted)' }}>We will add subscription details soon.</p>
+        <p style={{ color: 'var(--muted)' }}>Subscription system отключена.</p>
         <p style={{ marginTop: '0.5rem' }}>
           <Link to="/products" style={{ color: 'var(--accent)' }}>
             {t('home.cta')}

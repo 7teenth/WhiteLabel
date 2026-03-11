@@ -1,10 +1,26 @@
 import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 import { Product } from '../hooks/useProducts';
 import { useCart } from '../lib/cart';
 import { useI18n } from '../lib/i18n';
+import { showToast } from './Toast';
+import { getPublicImageUrl } from '../lib/storage';
+const isHttp = (v: string) => /^https?:\/\//i.test(v);
 
 export function ProductCard({ product }: { product: Product }) {
-  const imageUrl = product.image || 'https://via.placeholder.com/400x300?text=Tool';
+  const placeholder = '/placeholder.png';
+  const mainImage = product.image || (product.images?.[0] ?? null);
+  const imageUrl = (() => {
+    if (!mainImage) return placeholder;
+    const candidates = [];
+    if (!isHttp(mainImage)) candidates.push(`/${mainImage}`);
+    const storageUrl = getPublicImageUrl(mainImage);
+    if (storageUrl) candidates.push(storageUrl);
+    candidates.push(placeholder);
+    return candidates[0];
+  })();
+  const [src, setSrc] = useState(imageUrl);
+  useEffect(() => setSrc(imageUrl), [imageUrl]);
   const { addItem } = useCart();
   const { t } = useI18n();
 
@@ -14,12 +30,18 @@ export function ProductCard({ product }: { product: Product }) {
   const handleAdd = (event: React.MouseEvent) => {
     event.preventDefault();
     addItem(product, 1);
+    showToast(t('toast.added'));
   };
 
   return (
     <Link to={`/products/${product.id}`} className="product-card">
       <div className="product-card__image">
-        <img src={imageUrl} alt={product.title} loading="lazy" />
+        <img
+          src={src}
+          alt={product.title}
+          loading="lazy"
+          onError={() => setSrc(placeholder)}
+        />
       </div>
       <div className="product-card__body">
         <h3 className="product-card__title">{product.title}</h3>

@@ -5,7 +5,6 @@ import RegisterPage from './pages/RegisterPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 import AccountPage from './pages/AccountPage';
 import CartPage from './pages/CartPage';
-import CheckoutPage from './pages/CheckoutPage';
 import ProductPage from './pages/ProductPage';
 import ProductsPage from './pages/ProductsPage';
 import AboutPage from './pages/AboutPage';
@@ -25,14 +24,6 @@ export default function App() {
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/cart" element={<CartPage />} />
-        <Route
-          path="/checkout"
-          element={
-            <RequireAuth>
-              <CheckoutPage />
-            </RequireAuth>
-          }
-        />
         <Route
           path="/account"
           element={

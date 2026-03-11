@@ -1,7 +1,6 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Session, User } from '@supabase/supabase-js';
 import { supabase } from './supabaseClient';
-import { createDefaultSubscription } from './billing';
 
 type AuthContextValue = {
   user: User | null;
@@ -43,9 +42,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { data, error } = await supabase.auth.signUp({ email, password, options });
 
     // Create a default subscription record for new users.
-    if (!error && data?.user) {
-      await createDefaultSubscription(data.user.id);
-    }
+    // subscription system removed
 
     return { error };
   }, []);

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type CSSProperties } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useProducts } from '../hooks/useProducts';
 import { ProductGrid } from '../components/ProductGrid';
@@ -59,7 +59,23 @@ export default function ProductsPage() {
     setAvailability('any');
   };
 
-  const sliderPercent = useMemo(() => Math.min(100, Math.max(0, (maxPrice / 500) * 100)), [maxPrice]);
+  const sliderRange = useMemo(() => {
+    const clamp = (value: number) => Math.min(100, Math.max(0, value));
+    return {
+      start: clamp((minPrice / 500) * 100),
+      end: clamp((maxPrice / 500) * 100),
+    };
+  }, [minPrice, maxPrice]);
+
+  const rangeBackground = `linear-gradient(90deg,
+    rgba(255,255,255,0.08) 0%,
+    rgba(255,255,255,0.08) ${sliderRange.start}%,
+    var(--accent) ${sliderRange.start}%,
+    var(--accent) ${sliderRange.end}%,
+    rgba(255,255,255,0.08) ${sliderRange.end}%,
+    rgba(255,255,255,0.08) 100%)`;
+
+  const sliderStyle = { '--range-bg': rangeBackground } as CSSProperties;
 
   return (
     <div className="container products-layout">
@@ -118,41 +134,53 @@ export default function ProductsPage() {
         <div className="wl-field">
           <label htmlFor="price">{t('filters.price')}</label>
           <div className="wl-range">
-            <input
-              id="price"
-              type="range"
-              min={0}
-              max={500}
-              step={5}
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(Number(e.target.value))}
-              style={{
-                background: `linear-gradient(90deg, var(--accent) 0%, var(--accent) ${sliderPercent}%, rgba(255,255,255,0.08) ${sliderPercent}%, rgba(255,255,255,0.08) 100%)`,
-              }}
-            />
-          <div className="wl-range__inputs">
-            <input
-              type="number"
-              min={0}
-              max={maxPrice}
-              value={minPrice}
-              onChange={(e) => setMinPrice(Number(e.target.value) || 0)}
-              aria-label={t('filters.price.min')}
-            />
-            <input
-              type="number"
-              min={minPrice}
-              max={500}
-              value={maxPrice}
-              onChange={(e) => setMaxPrice(Number(e.target.value) || 0)}
-              aria-label={t('filters.price.max')}
-            />
-          </div>
-          <div className="wl-field__hint">
-            {t('filters.price.minLabel', { value: minPrice })} / {t('filters.price.upto', { value: maxPrice })}
+            <div className="wl-range__slider" style={sliderStyle}>
+              <input
+                id="price-min"
+                type="range"
+                min={0}
+                max={500}
+                step={5}
+                value={minPrice}
+                onChange={(e) => setMinPrice(Math.min(Number(e.target.value), maxPrice))}
+                aria-label={t('filters.price.min')}
+                className="wl-range__input wl-range__input--min"
+              />
+              <input
+                id="price-max"
+                type="range"
+                min={0}
+                max={500}
+                step={5}
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(Math.max(Number(e.target.value), minPrice))}
+                aria-label={t('filters.price.max')}
+                className="wl-range__input wl-range__input--max"
+              />
+            </div>
+            <div className="wl-range__inputs">
+              <input
+                type="number"
+                min={0}
+                max={maxPrice}
+                value={minPrice}
+                onChange={(e) => setMinPrice(Math.min(Number(e.target.value) || 0, maxPrice))}
+                aria-label={t('filters.price.min')}
+              />
+              <input
+                type="number"
+                min={minPrice}
+                max={500}
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(Math.max(Number(e.target.value) || 0, minPrice))}
+                aria-label={t('filters.price.max')}
+              />
+            </div>
+            <div className="wl-field__hint">
+              {t('filters.price.minLabel', { value: minPrice })} / {t('filters.price.upto', { value: maxPrice })}
+            </div>
           </div>
         </div>
-      </div>
 
       </aside>
 
@@ -160,7 +188,6 @@ export default function ProductsPage() {
         <header className="wl-products-head">
           <div>
             <h1 style={{ margin: 0 }}>{t('products.title')}</h1>
-            <p style={{ margin: '0.35rem 0 0', maxWidth: 680 }}>{t('products.subtitle')}</p>
           </div>
         </header>
 

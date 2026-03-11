@@ -27,7 +27,7 @@ export function LanguageSwitcher() {
   const currentShort = current?.short ?? 'Lang';
 
   return (
-    <div className="wl-lang" ref={ref}>
+    <div className={open ? 'wl-lang wl-lang--open' : 'wl-lang'} ref={ref}>
       <button
         type="button"
         className="wl-lang__trigger"
