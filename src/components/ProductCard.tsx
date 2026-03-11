@@ -30,7 +30,7 @@ export function ProductCard({ product }: { product: Product }) {
         <div className="product-card__meta">
           <span className="product-card__pill product-card__rating">★ {rating.toFixed(1)}</span>
           <span className="product-card__pill">{reviews} {t('product.reviews')}</span>
-          {product.stock !== undefined && (
+          {product.stock != null && (
             <span className="product-card__pill">{product.stock > 0 ? t('filters.inStock') : t('filters.outOfStock')}</span>
           )}
         </div>

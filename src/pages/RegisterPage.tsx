@@ -19,7 +19,7 @@ export default function RegisterPage() {
     event.preventDefault();
     setLoading(true);
     setError(null);
-    const { error } = await signUp({ email, password, options: { data: { name } } });
+    const { error } = await signUp(email, password, { data: { name } });
     setLoading(false);
 
     if (error) {
