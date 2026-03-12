@@ -26,6 +26,8 @@ export function ProductCard({ product }: { product: Product }) {
 
   const rating = product.rating ?? 4.8;
   const reviews = product.reviews_count ?? 0;
+  // Normalize stock so undefined behaves like null, making narrowing below reliable
+  const stock = product.stock ?? null;
 
   const handleAdd = (event: React.MouseEvent) => {
     event.preventDefault();
@@ -52,8 +54,8 @@ export function ProductCard({ product }: { product: Product }) {
         <div className="product-card__meta">
           <span className="product-card__pill product-card__rating">★ {rating.toFixed(1)}</span>
           <span className="product-card__pill">{reviews} {t('product.reviews')}</span>
-          {product.stock != null && (
-            <span className="product-card__pill">{product.stock > 0 ? t('filters.inStock') : t('filters.outOfStock')}</span>
+          {stock !== null && (
+            <span className="product-card__pill">{stock > 0 ? t('filters.inStock') : t('filters.outOfStock')}</span>
           )}
         </div>
         <div className="product-card__actions">
